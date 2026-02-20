@@ -1,10 +1,11 @@
+import Link from "next/link";
+import { Suspense } from "react";
 import { DeployButton } from "@/components/deploy-button";
 import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { hasEnvVars } from "@/lib/utils";
-import Link from "next/link";
-import { Suspense } from "react";
+import Navbar from "@/components/navbar";
 
 export default function ProtectedLayout({
   children,
@@ -16,22 +17,41 @@ export default function ProtectedLayout({
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
         <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
           <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-            <div className="flex gap-5 items-center font-semibold">
-              <Link href={"/"}>Next.js Supabase Starter</Link>
-              <div className="flex items-center gap-2">
-                <DeployButton />
+            
+            {/* --- NAVIGATION LINKS --- */}
+            <div className="flex gap-8 items-center font-semibold">
+              <Link href="/protected" className="hover:opacity-70">
+                Dashboard
+              </Link>
+              <div className="flex items-center gap-6 text-foreground/70 font-normal">
+                <Link href="/protected/instruments" className="hover:text-foreground">
+                  Instruments
+                </Link>
+                <Link href="/protected/notes" className="hover:text-foreground">
+                  Notes
+                </Link>
               </div>
             </div>
-            {!hasEnvVars ? (
-              <EnvVarWarning />
-            ) : (
-              <Suspense>
-                <AuthButton />
-              </Suspense>
-            )}
+
+            {/* --- AUTH & UTILS --- */}
+            <div className="flex items-center gap-4">
+              {/* If you still want the DeployButton, keep it here */}
+              <div className="hidden md:flex items-center gap-2">
+                {/* <DeployButton /> */}
+              </div>
+              
+              {!hasEnvVars ? (
+                <EnvVarWarning />
+              ) : (
+                <Suspense>
+                  <AuthButton />
+                </Suspense>
+              )}
+            </div>
           </div>
         </nav>
-        <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
+
+        <div className="flex-1 flex flex-col gap-20 w-full max-w-5xl p-5">
           {children}
         </div>
 
@@ -39,7 +59,7 @@ export default function ProtectedLayout({
           <p>
             Powered by{" "}
             <a
-              href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
+              href="https://supabase.com"
               target="_blank"
               className="font-bold hover:underline"
               rel="noreferrer"
